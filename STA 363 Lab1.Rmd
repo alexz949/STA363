@@ -1,0 +1,207 @@
+---
+title: "STA 363 Lab1"
+author: "Shiyu Jiang, Elaine Lu, Alex Zhang"
+date: "2024-01-19"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r}
+suppressMessages(library(palmerpenguins))
+data("penguins")
+```
+
+## The Data
+#### Question 1 Based on the information we have so far, how do we know that we are dealing with a supervised learning task?
+Because We have a Response variable.
+
+#### Question 2 Based on the information we have so far, are we dealing with a regression or classification modeling task?
+We want to do regression because the response variable is numerical, not discrete.
+
+```{r}
+summary(penguins)
+```
+
+
+#### Question 3 For Client 1, are we dealing with a prediction or association task?
+We deal with association because client 1 cares about relationship between the flipper length and the body mass of a penguin.
+
+#### Question 4 For Client 2, are we dealing with a prediction or association task?
+Client 2 cares about prediction, because client 2 wants to estimate the body mass of penguins once other certain characteristics.
+
+
+## Exploring the data
+```{r}
+summary(penguins$body_mass_g)
+```
+```{r}
+summary(penguins[, "body_mass_g"])
+```
+
+#### Question 5 Based on the summary, what is the smallest body mass in the data set?
+The smallest is 2700 grams.
+
+#### Question 6 50% of penguins have a body mass that is less than or equal to how many grams?
+The median is 4050 grams, which represents 50% of penguins have less than or equal to this value.
+
+## Missing Data
+#### Question 7 How many penguins in the data set do not have a body mass recorded?
+```{r}
+penguinsClean <- na.omit(penguins)
+
+```
+
+2 penguins does not have a body mass recorded, because NaN count from summary is 2.
+
+
+#### Question 8 In total, how many rows contained missing data in the penguins data set? How many penguins are we left with in the penguinsClean data set?
+```{r}
+summary(penguinsClean)
+penguinsClean
+344-333
+```
+
+We have 11 rows that has missing data in the penguins data set. We have 333 rows left in the penguinsClean data set.
+
+## Creating Plots
+```{r}
+library(rlang)
+suppressMessages(library(ggplot2))
+```
+
+#### Question 9 We have a numeric feature (flipper length) and a numeric response variable (body mass). What type of plot could we use to examine the relationship between these two variables?
+We can use scatter plot to show relationship between two numerical variables.
+```{r}
+ggplot(penguinsClean, aes(x =flipper_length_mm, y=body_mass_g)) +
+  geom_point(col = 'blue')
+```
+
+####Question 10 Create a plot to explore the relationship between X = bill depth and Y = body mass. Make the color of the points on the graph purple and show the resulting plot.
+
+```{r}
+ggplot(penguinsClean, aes(x =bill_depth_mm, y=body_mass_g)) +
+  geom_point(col = 'purple') +
+  labs(title="Figure 1:", x = "Bill Depth (in mm)",
+  y = "Body Mass (in grams)", caption = "A scatter plot of 
+  fliiper length versus body mass") 
+```
+#### Question 11 Copy the code you used to make the graph from Question 10. Now, add the title “Figure 2:” and add appropriate labels to the x and y axis.
+```{r}
+ggplot(penguinsClean, aes(x =bill_depth_mm, y=body_mass_g)) +
+  geom_point(col = 'purple') +
+  labs(title="Figure 2:", x = "Bill Depth (in mm)",
+  y = "Body Mass (in grams)", caption = "A scatter plot of 
+  fliiper length versus body mass") 
+```
+
+#### Question 12 Based on the graph of X = flipper length versus Y = body mass, does it look like using a parametric model is appropriate? In other words, is the relationship a clear shape like a line or a curve?
+
+```{r}
+# Install the packages
+# remotes::install_github("MatthewBJane/theme_park")
+library(ThemePark)
+```
+
+```{r}
+# Make the scatter plot
+ggplot(penguinsClean, aes(x=flipper_length_mm, y = body_mass_g)) + 
+  geom_point(color = barbie_theme_colors["medium"]) +
+  labs(title = 'Barbie Scatter Plot', x = "Flipper Length (mm)", y = "Body Mass (grams)") +
+  theme_barbie()
+```
+It is reasonable to use a parametric model, because we can see a clear positive and linear trend shown from the scatter plot.
+
+#### Question 13 Add an LSLR line to the plot for X = flipper length vs Y = body mass. Title the resulting graph Figure 3.
+```{r}
+ggplot(penguinsClean, aes(x=flipper_length_mm, y = body_mass_g)) + 
+  geom_point(color = zelda_theme_colors["medium"]) +
+  labs(title = 'Figure 3:', x = "Flipper Length (mm)", y = "Body Mass (grams)") +  theme_hufflepuff() + stat_smooth(method = "lm", formula = y ~ x, se = FALSE)
+```
+
+#### Question 14 Based on what you see so far, does using a line look like a reasonable choice for a model?
+A line should be a reasonable choice for the model since we have clear positive and linear trends shown from the scatter plots.
+
+## Sketching Graphs
+```{r}
+ggplot(penguinsClean, aes(body_mass_g)) +
+  geom_histogram(bins = 20, fill = "blue", col = "white")
+```
+
+#### Question 15 Stack the 4 graphs you would use to explore the relationship between each of the 4 features (flipper length, bill length, species, and sex) versus the response (so flipper length vs. body mass, and then bill length vs. body mass,etc.). You need to stack the graphs in a 2 x 2 grid.
+
+```{r}
+# First graph 
+g1<- ggplot(penguinsClean, aes(x = flipper_length_mm, y = body_mass_g)) + 
+  geom_point(color = gryffindor_theme_colors["medium"])
+
+# Second graph 
+g2<- ggplot(penguinsClean, aes(x = bill_length_mm, y = body_mass_g)) + 
+  geom_point(color = hufflepuff_theme_colors["medium"]) 
+
+# Third graph 
+g3<- ggplot(penguinsClean, aes(x = species, y = body_mass_g)) + 
+  geom_point(color = ravenclaw_theme_colors["medium"]) 
+
+# Forth graph 
+g4<- ggplot(penguinsClean, aes(x = sex, y = body_mass_g)) + 
+  geom_point(color = slytherin_theme_colors["medium"]) 
+
+# Stack the two graphs 
+gridExtra::grid.arrange(g1,g2,g3,g4, ncol = 2, nrow = 2)
+```
+#### Question 16 Create a table, using the second way to make a table, for the island where the penguins live. Label the columns appropriately.
+
+```{r}
+knitr::kable(table(penguinsClean$island), col.names=c("Island", "Count") )
+```
+
+#### Question 17 Do we have the same number of male and female penguins on each island? Create a table to find out. Show the table, and answer the question in a complete sentence.
+```{r}
+knitr::kable(table(penguinsClean$sex, penguinsClean$island)) 
+```
+Based on the table shown above, we can conclude that we do not have the same number of male and female penguins on each island.
+
+#### Question 18 Our client wants to know if we should include the feature island in the model, or if including species is enough. Create a table to explore the relationship between species and island. Show the table, and respond to your client in a complete sentence.
+
+```{r}
+knitr::kable(table(penguinsClean$species, penguinsClean$island)) 
+```
+
+Based on the table shown above, we might conclude that we should not include the feature island in the model because we have unbalanced species group on each island (only "Chinstrap" on island Dream, and "Gentoo" on island Biscoe). 
+
+#### Question 19 Create a scatter plot with bill depth on the x axis, body mass on the y axis, color the dots by island, and have a different shape for each island. Make sure to use appropriate titles/labels.
+
+```{r}
+ggplot(penguinsClean, aes(x=bill_depth_mm, y = body_mass_g, color = species, pch = species)) + 
+  labs(title="Figure 4:", x = "Bill Depth (in mm)",
+  y = "Body Mass (in grams)", caption = "A scatter plot of 
+  bill depth versus body mass with different color and shapes based on species") +
+  geom_point() 
+```
+
+#### Question 20 What command would you use if you wanted only two columns? Show the resultant plot, and add appropriate labels.
+
+```{r}
+ggplot(penguinsClean, aes(x=flipper_length_mm, y = body_mass_g, color = species)) + 
+   labs(title="Figure 5:", x = "Flipper Length (in mm)",
+  y = "Body Mass (in grams)", caption = "three scatter plots of 
+  flipper length versus body mass with different color and shapes based on species") +
+  geom_point() + 
+  facet_wrap( ~ species, ncol=2)
+```
+
+#### Question 21 What command would you use if you wanted to add trained LSLR lines to the facet plot? Show the resultant plot, and make sure the axes are appropriately labeled.
+
+```{r}
+ggplot(penguinsClean, aes(x=flipper_length_mm, y = body_mass_g, color = species)) + 
+   labs(title="Figure 5:", x = "Flipper Length (in mm)",
+  y = "Body Mass (in grams)", caption = "three scatter plots of 
+  flipper length versus body mass with different color and shapes based on species") +
+  geom_point() + 
+  stat_smooth(method = "lm", formula = y ~ x, se = FALSE) +
+  facet_wrap( ~ species, ncol=2)
+```
+
