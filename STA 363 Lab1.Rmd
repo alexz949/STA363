@@ -175,7 +175,7 @@ Based on the table shown above, we might conclude that we should not include the
 #### Question 19 Create a scatter plot with bill depth on the x axis, body mass on the y axis, color the dots by island, and have a different shape for each island. Make sure to use appropriate titles/labels.
 
 ```{r}
-ggplot(penguinsClean, aes(x=bill_depth_mm, y = body_mass_g, color = species, pch = species)) + 
+ggplot(penguinsClean, aes(x=bill_depth_mm, y = body_mass_g, color = island, pch = island)) + 
   labs(title="Figure 4:", x = "Bill Depth (in mm)",
   y = "Body Mass (in grams)", caption = "A scatter plot of 
   bill depth versus body mass with different color and shapes based on species") +
