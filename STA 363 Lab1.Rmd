@@ -16,7 +16,7 @@ data("penguins")
 
 ## The Data
 #### Question 1 Based on the information we have so far, how do we know that we are dealing with a supervised learning task?
-Because We have a Response variable.
+Because We have a Response variable, and some features.
 
 #### Question 2 Based on the information we have so far, are we dealing with a regression or classification modeling task?
 We want to do regression because the response variable is numerical, not discrete.
@@ -37,6 +37,7 @@ Client 2 cares about prediction, because client 2 wants to estimate the body mas
 ```{r}
 summary(penguins$body_mass_g)
 ```
+
 ```{r}
 summary(penguins[, "body_mass_g"])
 ```
@@ -132,22 +133,27 @@ ggplot(penguinsClean, aes(body_mass_g)) +
 
 #### Question 15 Stack the 4 graphs you would use to explore the relationship between each of the 4 features (flipper length, bill length, species, and sex) versus the response (so flipper length vs. body mass, and then bill length vs. body mass,etc.). You need to stack the graphs in a 2 x 2 grid.
 
+
 ```{r}
 # First graph 
 g1<- ggplot(penguinsClean, aes(x = flipper_length_mm, y = body_mass_g)) + 
-  geom_point(color = gryffindor_theme_colors["medium"])
+  geom_point(color = gryffindor_theme_colors["medium"]) +
+    labs(title = "Figure 4.1") 
 
 # Second graph 
 g2<- ggplot(penguinsClean, aes(x = bill_length_mm, y = body_mass_g)) + 
-  geom_point(color = hufflepuff_theme_colors["medium"]) 
+  geom_point(color = hufflepuff_theme_colors["medium"]) +
+    labs(title ="Figure 4.2") 
 
-# Third graph 
-g3<- ggplot(penguinsClean, aes(x = species, y = body_mass_g)) + 
-  geom_point(color = ravenclaw_theme_colors["medium"]) 
+# Third graph
+g3 <- ggplot(penguinsClean, aes(x=sex, y = body_mass_g)) + 
+  geom_boxplot(color = ravenclaw_theme_colors["medium"]) +
+  labs(title = "Figure 4.3:") 
 
-# Forth graph 
-g4<- ggplot(penguinsClean, aes(x = sex, y = body_mass_g)) + 
-  geom_point(color = slytherin_theme_colors["medium"]) 
+# Forth graph
+g4 <- ggplot(penguinsClean, aes(x=species, y = body_mass_g)) + 
+  geom_boxplot(color = slytherin_theme_colors["medium"]) +
+  labs(title = "Figure 4.4")
 
 # Stack the two graphs 
 gridExtra::grid.arrange(g1,g2,g3,g4, ncol = 2, nrow = 2)
@@ -162,6 +168,7 @@ knitr::kable(table(penguinsClean$island), col.names=c("Island", "Count") )
 ```{r}
 knitr::kable(table(penguinsClean$sex, penguinsClean$island)) 
 ```
+
 Based on the table shown above, we can conclude that we do not have the same number of male and female penguins on each island.
 
 #### Question 18 Our client wants to know if we should include the feature island in the model, or if including species is enough. Create a table to explore the relationship between species and island. Show the table, and respond to your client in a complete sentence.
@@ -175,7 +182,7 @@ Based on the table shown above, we might conclude that we should not include the
 #### Question 19 Create a scatter plot with bill depth on the x axis, body mass on the y axis, color the dots by island, and have a different shape for each island. Make sure to use appropriate titles/labels.
 
 ```{r}
-ggplot(penguinsClean, aes(x=bill_depth_mm, y = body_mass_g, color = island, pch = island)) + 
+ggplot(penguinsClean, aes(x=bill_depth_mm, y = body_mass_g, color = species, pch = species)) + 
   labs(title="Figure 4:", x = "Bill Depth (in mm)",
   y = "Body Mass (in grams)", caption = "A scatter plot of 
   bill depth versus body mass with different color and shapes based on species") +
