@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-```{r}
+```{r,warning=FALSE}
 suppressMessages(library(palmerpenguins))
 data("penguins")
 ```
@@ -25,7 +25,7 @@ Because We have a Response variable, and some Features. Also we are interested i
 We want to do regression because the response variable is numerical, not discrete.
 
 ```{r}
-summary(penguins)
+knitr::kable(summary(penguins),caption="Summary of Penguins")
 ```
 
 #### Question 3 For Client 1, are we dealing with a prediction or association task?
@@ -39,20 +39,16 @@ We deal with prediction, because client 2 wants to estimate the body mass of pen
 ## Exploring the data
 
 ```{r}
-summary(penguins$body_mass_g)
-```
-
-```{r}
-summary(penguins[, "body_mass_g"])
+knitr::kable(summary(penguins[, "body_mass_g"]),col.names = "Body Mass (grams)")
 ```
 
 #### Question 5 Based on the summary, what is the smallest body mass in the data set?
 
-The smallest is 2700 grams.
+The smallest body mass in the data set is 2700 grams.
 
 #### Question 6 50% of penguins have a body mass that is less than or equal to how many grams?
 
-The median is 4050 grams, which represents 50% of penguins have less than or equal to this value.
+The median penguin body mass is 4050 grams as we observed from output above, which represents 50% of penguins have less than or equal to this value.
 
 ## Missing Data
 
@@ -60,10 +56,9 @@ The median is 4050 grams, which represents 50% of penguins have less than or equ
 
 ```{r}
 penguinsClean <- na.omit(penguins)
-
 ```
 
-2 penguins does not have a body mass recorded, because NaN count from summary is 2.
+Two penguins does not have a body mass recorded, because NA count from summary is 2.
 
 #### Question 8 In total, how many rows contained missing data in the penguins data set? How many penguins are we left with in the penguinsClean data set?
 
@@ -73,11 +68,11 @@ penguinsClean
 344-333
 ```
 
-We have 11 rows that has missing data in the penguins data set. We have 333 rows left in the penguinsClean data set.
+There are 344 observations in the penguins data set, and 333 observations in penguinsClean data set. Therefore we have 11 rows that has missing data in the penguins data set.
 
 ## Creating Plots
 
-```{r}
+```{r,warning=FALSE}
 library(rlang)
 suppressMessages(library(ggplot2))
 ```
@@ -113,7 +108,9 @@ ggplot(penguinsClean, aes(x =bill_depth_mm, y=body_mass_g)) +
 
 #### Question 12 Based on the graph of X = flipper length versus Y = body mass, does it look like using a parametric model is appropriate? In other words, is the relationship a clear shape like a line or a curve?
 
-```{r}
+It is reasonable to use a parametric model, because we can see a clear positive and linear trend shown from the scatter plot.
+
+```{r,warning=FALSE}
 # Install the packages
 # remotes::install_github("MatthewBJane/theme_park")
 library(ThemePark)
@@ -127,14 +124,13 @@ ggplot(penguinsClean, aes(x=flipper_length_mm, y = body_mass_g)) +
   theme_barbie()
 ```
 
-It is reasonable to use a parametric model, because we can see a clear positive and linear trend shown from the scatter plot.
 
 #### Question 13 Add an LSLR line to the plot for X = flipper length vs Y = body mass. Title the resulting graph Figure 3.
 
 ```{r}
 ggplot(penguinsClean, aes(x=flipper_length_mm, y = body_mass_g)) + 
   geom_point(color = zelda_theme_colors["medium"]) +
-  labs(title = 'Figure 3:', x = "Flipper Length (mm)", y = "Body Mass (grams)") +  theme_hufflepuff() + stat_smooth(method = "lm", formula = y ~ x, se = FALSE)
+  labs(title = 'Figure 3:', x = "Flipper Length (mm)", y = "Body Mass (grams)") +  theme_zelda() + stat_smooth(method = "lm", formula = y ~ x, se = FALSE)
 ```
 
 #### Question 14 Based on what you see so far, does using a line look like a reasonable choice for a model?
@@ -174,7 +170,7 @@ gridExtra::grid.arrange(g1,g2,g3,g4, ncol = 2, nrow = 2)
 
 #### Question 16 Create a table, using the second way to make a table, for the island where the penguins live. Label the columns appropriately.
 
-```{r}
+```{r,warning=FALSE}
 knitr::kable(table(penguinsClean$island), col.names=c("Island", "Count") )
 ```
 
