@@ -127,12 +127,6 @@ Question 14 Based on what you see so far, does using a line look like a reasonab
 
 A line should be a reasonable choice for the model since we have clear positive and linear trends shown from the scatter plots.
 
-Sketching Graphs
-
-{r}
-ggplot(penguinsClean, aes(body_mass_g)) +
-  geom_histogram(bins = 20, fill = "blue", col = "white")
-
 Question 15 Stack the 4 graphs you would use to explore the relationship between each of the 4 features (flipper length, bill length, species, and sex) versus the response (so flipper length vs. body mass, and then bill length vs. body mass,etc.). You need to stack the graphs in a 2 x 2 grid.
 
 {r}
