@@ -199,32 +199,32 @@ Based on the table shown above, we might conclude that we should not include the
 #### Question 19 Create a scatter plot with bill depth on the x axis, body mass on the y axis, color the dots by island, and have a different shape for each island. Make sure to use appropriate titles/labels.
 
 ```{r}
-ggplot(penguinsClean, aes(x=bill_depth_mm, y = body_mass_g, color = species, pch = species)) + 
+ggplot(penguinsClean, aes(x=bill_depth_mm, y = body_mass_g, color = island, pch = island)) + 
   labs(title="Figure 5.1:", x = "Bill Depth (in mm)",
   y = "Body Mass (in grams)", caption = "A scatter plot of 
-  bill depth versus body mass with different color and shapes based on species") +
+  bill depth versus body mass with different color and shapes based on island") +
   geom_point() 
 ```
 
 #### Question 20 What command would you use if you wanted only two columns? Show the resultant plot, and add appropriate labels.
 
 ```{r}
-ggplot(penguinsClean, aes(x = bill_depth_mm, y = body_mass_g, color = species)) + 
+ggplot(penguinsClean, aes(x = bill_depth_mm, y = body_mass_g, color = island)) + 
    labs(title="Figure 5.2:", x = "Bill Depth (in mm)",
   y = "Body Mass (in grams)", caption = "three scatter plots of 
-  flipper length versus body mass with different color and shapes based on species") +
+  flipper length versus body mass with different color and shapes based on island") +
   geom_point() + 
-  facet_wrap( ~ species, ncol=2)
+  facet_wrap( ~ island, ncol=2)
 ```
 
 #### Question 21 What command would you use if you wanted to add trained LSLR lines to the facet plot? Show the resultant plot, and make sure the axes are appropriately labeled.
 
 ```{r}
-ggplot(penguinsClean, aes(x = bill_depth_mm, y = body_mass_g, color = species)) + 
+ggplot(penguinsClean, aes(x = bill_depth_mm, y = body_mass_g, color = island)) + 
    labs(title="Figure 5.3:", x = "Bill Depth (in mm)",
   y = "Body Mass (in grams)", caption = "three scatter plots of 
-  flipper length versus body mass with different color and shapes based on species") +
+  flipper length versus body mass with different color and shapes based on island") +
   geom_point() + 
   stat_smooth(method = "lm", formula = y ~ x, se = FALSE) +
-  facet_wrap( ~ species, ncol=2)
+  facet_wrap( ~ island, ncol=2)
 ```
