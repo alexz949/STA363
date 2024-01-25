@@ -93,7 +93,7 @@ ggplot(penguinsClean, aes(x =bill_depth_mm, y=body_mass_g)) +
   geom_point(col = 'purple') +
   labs(title="Figure 1:", x = "Bill Depth (in mm)",
   y = "Body Mass (in grams)", caption = "A scatter plot of 
-  fliiper length versus body mass") 
+  bill depth versus body mass") 
 ```
 
 #### Question 11 Copy the code you used to make the graph from Question 10. Now, add the title “Figure 2:” and add appropriate labels to the x and y axis.
@@ -103,7 +103,7 @@ ggplot(penguinsClean, aes(x =bill_depth_mm, y=body_mass_g)) +
   geom_point(col = 'purple') +
   labs(title="Figure 2:", x = "Bill Depth (in mm)",
   y = "Body Mass (in grams)", caption = "A scatter plot of 
-  fliiper length versus body mass") 
+  bill depth versus body mass") 
 ```
 
 #### Question 12 Based on the graph of X = flipper length versus Y = body mass, does it look like using a parametric model is appropriate? In other words, is the relationship a clear shape like a line or a curve?
@@ -205,10 +205,10 @@ ggplot(penguinsClean, aes(x=bill_depth_mm, y = body_mass_g, color = island, pch 
 #### Question 20 What command would you use if you wanted only two columns? Show the resultant plot, and add appropriate labels.
 
 ```{r}
-ggplot(penguinsClean, aes(x = bill_depth_mm, y = body_mass_g, color = island)) + 
+ggplot(penguinsClean, aes(x = bill_depth_mm, y = body_mass_g, color = island, pch = island)) + 
    labs(title="Figure 5.2:", x = "Bill Depth (in mm)",
   y = "Body Mass (in grams)", caption = "three scatter plots of 
-  flipper length versus body mass with different color and shapes based on island") +
+  bill depth versus body mass with different color and shapes based on island") +
   geom_point() + 
   facet_wrap( ~ island, ncol=2)
 ```
@@ -216,10 +216,10 @@ ggplot(penguinsClean, aes(x = bill_depth_mm, y = body_mass_g, color = island)) +
 #### Question 21 What command would you use if you wanted to add trained LSLR lines to the facet plot? Show the resultant plot, and make sure the axes are appropriately labeled.
 
 ```{r}
-ggplot(penguinsClean, aes(x = bill_depth_mm, y = body_mass_g, color = island)) + 
+ggplot(penguinsClean, aes(x = bill_depth_mm, y = body_mass_g, color = island, pch = island)) + 
    labs(title="Figure 5.3:", x = "Bill Depth (in mm)",
   y = "Body Mass (in grams)", caption = "three scatter plots of 
-  flipper length versus body mass with different color and shapes based on island") +
+  bill depth versus body mass with different color and shapes based on island") +
   geom_point() + 
   stat_smooth(method = "lm", formula = y ~ x, se = FALSE) +
   facet_wrap( ~ island, ncol=2)
