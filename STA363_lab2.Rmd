@@ -45,11 +45,13 @@ holder
 Happiness[3,4]
 ```
 
-We will print the number at row 3 and column 4.
+This code print out the output of the third row in the forth column in the dataset Happiness.
 
 #### Question 3 What code would print out only the 2nd column?
 
-```{r, echo=TRUE}
+We will use the code Happiness[, 2]
+
+```{r}
 Happiness[ , 2]
 ```
 
@@ -68,7 +70,13 @@ This code removes the column 3, 4, and 5 from Happiness data set and use <- to u
 Happiness <- Happiness[, -c(9:16)]
 ```
 
-Because we are removing columns by index. We have already remove three columns which means we have to subtract 3 from the columns index we want to remove next time.
+a)  Happiness <- Happiness[,-c(12:16)]
+b)  Since we firstly removed column 3-5, the numbers of the columns will thus change correspondingly. After removing, all the columns number after 5 will decrease by 3. Hence, the column numbers asked (12-19) will now decrease by 3, resuling in 9-16.
+
+
+```{r}
+colnames(Happiness)
+```
 
 
 #### Question 6 Use the code above to change the names of the columns to “country”, “happiness”, “logGDP”, “socialSupport”, “healthyLifeExpectancy”, “freedomChoices”, “generosity”, and “perceptionCorruption”. Print out the new column names (colnames(Happiness)) as the answer to this question.
@@ -133,7 +141,9 @@ summary(happiness25)
 ```
 Based on the summary, there are 34 missing rows on happiness score.
 
-#### Question 10 Train a LSLR model with X = log GDP and Y = happiness score using the happiness25 data set. Store your model output under the name MAR25_model. Write down the trained LSLR model using proper notation. Note: When you run lm with missing data, it performs available case analysis 
+#### Question 10
+
+$$\widehat{Happiness} = -2.24 + 0.82 logGDP$$
 
 ```{r}
 # Train the model
@@ -147,27 +157,25 @@ confint(full_model, level = .95)
 ```
 #### Question 11 Build a 95% confidence interval for the population slope using the model you trained in Question 10. Is this the same interval you got from the model trained on the full data set? If it is different, explain what about the interval is different than when we used the full data set.
 
-The 95% confidence interval for population slope is (0.70, 0.93). It is not the same interval we got from the full data set. I think this interval generally has a larger slope than what we used in full data set.
+The 95% confidence interval is (0.70, 0.93). It is not the same interval we got from the full data set. The new 95%CI for hte intercept decreases while that for the logGDP increases.I think this interval generally has a larger slope than what we used in full data set.
 
 
 
 
-
+| **Full Data **   |             |             |   |   | |------------------|-------------|-------------|---|---| |                  | Lower Bound | Upper Bound |   |   | | Intercept        | -2.41       | -.51        |   |   | | Slope            | .64         | .84         |   |   | |------------------|-------------|-------------|---|---| | **25% Missing ** |             |             |   |   | |------------------|-------------|-------------|---|---| |                  | Lower Bound | Upper Bound |   |   | | Intercept        |             |             |   |   | | Slope  
 
 
 
 #### Question 12 Fill in the blanks in the skeleton code above to find the mean happiness score in the observed (non-missing) values in the happiness25 data set. State the mean (round to two decimal places). What do you think the na.rm = TRUE part of the code does?
 
-```{r, echo = TRUE}
+```{r}
 # Find the mean of happiness score
 # in the happiness25 data set
 mean(happiness25$happiness, na.rm = TRUE)
 ```
-The mean is 5.41
-na.rm=True ignores all na value in happiness column in happiness25 data set.
 
-
-
+a) The mean value of happiness score is 5.41
+b) This part is to ensure that we do not have any missing data involved when we are calculating the mean value.
 
 #### Question 13 Does row 11 have a missing value for happiness score in the happiness25 data set?
 ```{r}
@@ -184,13 +192,13 @@ No.
 which( is.na( happiness25$happiness) == TRUE)
 ```
 
-We will change the " == TRUE" into " == FALSE".
+
 
 
 
 
 #### Question 15 Fill in the blanks in the skeleton code above to use UMI to impute the missing values for happiness score. Run the code and show your code.
-```{r, echo = TRUE}
+```{r}
 # Find the rows missing happiness score
 # in the happiness25 data set
 whichMissing <- which(is.na(happiness25$happiness) == TRUE)
@@ -204,8 +212,9 @@ happiness25[ whichMissing, "happiness_UMI"] <- mean(happiness25$happiness, na.rm
 ```
 
 
+#### Question 16
 
-#### Question 16 Train a LSLR model with X = log GDP and Y = happiness_UMI using the happiness25 data set. Store your model output under the name UMI_model. Build and show a 95% confidence interval for the population slope using this trained model.
+$$\widehat{Happiness} = -0.20 + 0.59 logGDP$$
 
 ```{r}
 # Train the model
@@ -217,6 +226,7 @@ UMI_model$coefficients
 # Build a 95% confidence interval
 confint(UMI_model, level = .95)
 ```
+
 #### Question 17 Discuss how the upper and lower bounds of the confidence intervals you got on the UMI imputed data differ from the above, correct confidence intervals.
 
 For confidence interval got from UMI data, confidence interval for intercept increase but interval for population slope decreases.s
@@ -279,6 +289,7 @@ happiness25[whichMissing, "happiness_Regression"] <-predict(imputation_engine, n
 #### Question 20 You will notice that we excluded column 1 and column 9 as features in training our imputation engine. Why did we need to do that?
 
 Column 1 is a categorical variables and it is unique for every row. We can not really take this feature into regression model. Column 9 is the happiness UMI score. We will have duplicate values if we put this into model.
+
 #### Question 21 Train the LSLR model with X = log GDP and Y = happiness_Regression using the happiness25 data set. Build and show a 95% confidence interval for the population slope.
 
 
