@@ -1,93 +1,80 @@
 ---
-title: "STA363_lab2"
-author: "Shiyu Jiang, Elaine Lu, Alex Zhang"
-date: "2024-01-26"
+title: "STA363 Lab2"
 output: html_document
+date: "2024-01-26"
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+```{r}
+library(readxl)
+DataForFigure2.1WHR2023 <- read_excel("~/Desktop/大学/Courses/STA/STA 363/Lab2/DataForFigure21WHR2023.xls")
+```
 
 ```{r}
 # Step 1: 
 # Create a new copy of the data set
 # under the new code name we want
+Happiness <- DataForFigure2.1WHR2023
 
-
-library(readxl)
-DataForFigure21WHR2023 <- read_excel("C:/Users/Administrator/Desktop/STA363/DataForFigure21WHR2023 .xls")
-
-Happiness <- DataForFigure21WHR2023
-Happiness <- data.frame(Happiness)
-
-
-  
-rm(DataForFigure21WHR2023)
-
-
+# Step 2: 
+# Remove the original data set
+rm(DataForFigure2.1WHR2023)
 ```
-
-
-
 
 #### Question 1 Using this idea of storing, create an object called holder which contains (stores) the numbers 1 through 7 (1:7). Once you have done this, type holder into a chunk and press play to show what has been stored under that name!
 
 ```{r}
-holder <- c(1:7)
+holder <- 1:7
 holder
 ```
 
 #### Question 2 What part of the Happiness data would we print out with the code Happiness[3,4]?
 
+This code print out the output of the third row in the forth column in the dataset Happiness.
+
 ```{r}
 Happiness[3,4]
 ```
 
-This code print out the output of the third row in the forth column in the dataset Happiness.
-
 #### Question 3 What code would print out only the 2nd column?
 
-We will use the code Happiness[, 2]
+Happiness[, 2]
 
 ```{r}
-Happiness[ , 2]
+Happiness[, 2]
 ```
 
+#### Question 4 Happiness \<- Happiness[,-c(3:5)] One of the skills we will practice in this course is translating code into words that clearly explain what each part of the code is doing. Let’s try it. In words, explain what the code above doing. Make sure you are clear about what the \<- part of the code and the - part of the code do.
 
-#### Question 4 Happiness <- Happiness[,-c(3:5)] One of the skills we will practice in this course is translating code into words that clearly explain what each part of the code is doing. Let’s try it. In words, explain what the code above doing. Make sure you are clear about what the <- part of the code and the - part of the code do.
+We are replacing the original Happiness dataset with the Happiness dataset without column 3 to 5.
 
 ```{r}
 Happiness <- Happiness[,-c(3:5)]
 ```
 
-This code removes the column 3, 4, and 5 from Happiness data set and use <- to update the Happiness data set we use.
-
 #### Question 5 We have already removed columns 3 to 5. Next, we need to remove columns 9 through 16. Show and run the code you would need to do remove columns 9 through 16. Originally, I told you we needed to remove columns 3-5 and columns 12 - 19. Why are we now removing 9 - 16 instead of 12 - 19?
-
-```{r}
-Happiness <- Happiness[, -c(9:16)]
-```
 
 a)  Happiness <- Happiness[,-c(12:16)]
 b)  Since we firstly removed column 3-5, the numbers of the columns will thus change correspondingly. After removing, all the columns number after 5 will decrease by 3. Hence, the column numbers asked (12-19) will now decrease by 3, resuling in 9-16.
 
-
 ```{r}
-colnames(Happiness)
+Happiness <- Happiness[,-c(9:16)]
 ```
 
-
-#### Question 6 Use the code above to change the names of the columns to “country”, “happiness”, “logGDP”, “socialSupport”, “healthyLifeExpectancy”, “freedomChoices”, “generosity”, and “perceptionCorruption”. Print out the new column names (colnames(Happiness)) as the answer to this question.
+#### Question 6 Use the code above to change the names of the columns to "country”, “happiness”, “logGDP”, “socialSupport”, “healthyLifeExpectancy”, “freedomChoices”, “generosity”, and “perceptionCorruption”. Print out the new column names (colnames(Happiness)) as the answer to this question. Note: You need the ” ” symbols around each name. This tells R this is a word and not a command.
 
 ```{r}
-colnames(Happiness) <- c("country", "happiness", "logGDP", "socialSupport", "healthyLifeExpectancy", "freedomChoices", "generosity","perceptionCorruption")
+colnames(Happiness) <- c("country", "happiness", "logGDP", "socialSupport", "healthyLifeExpectancy", "freedomChoices", "generosity", "perceptionCorruption")
 colnames(Happiness)
 ```
 
 #### Question 7 Is this a prediction task or an association task?
-This is an association task because our client is interested in finding relationship between response variable and a feature.
+This is an association task because our client is interested in the relationship of the responding var. and the explantory var.
+
+$$\widehat{Happiness} = -1.46 + 0.74 logGDP$$
 
 ```{r}
 # Train the model
@@ -95,15 +82,7 @@ full_model <- lm( happiness ~ logGDP, data = Happiness)
 
 # Look at the regression coefficients
 full_model$coefficients
-
-# Build a 95% confidence interval
-confint(full_model, level = .95)
 ```
-
-
-#### Question 8 Write down the trained LSLR model (i.e., the regression line) using proper notation. Round to two decimal places.
-
-$$\widehat{Happiness}_i = -1.46 + 0.74logGDP_i$$
 
 
 ```{r}
@@ -130,108 +109,71 @@ create_MAR <- function(data, percentMissing, variableMissing){
 }
 ```
 
-
-
-
 #### Question 9 Using the function, create a data set called happiness25 with 25% missing data for happiness score. How many rows in this data set are missing information on happiness score? Hint: The summary command is helpful for this.
 
+We are missing 34 data on happiness score.
 ```{r}
 happiness25 <- create_MAR(Happiness, .25, "happiness")
 summary(happiness25)
 ```
-Based on the summary, there are 34 missing rows on happiness score.
 
-#### Question 10 Train a LSLR model with X = log GDP and Y = happiness score using the happiness25 data set. Store your model output under the name MAR25_model. Write down the trained LSLR model using proper notation.
+#### Question 10 Train a LSLR model with X = log GDP and Y = happiness score using the happiness25 data set. Store your model output under the name MAR25_model. Write down the trained LSLR model using proper notation. Note: When you run lm with missing data, it performs available case analysis (removing all rows without information in X or Y). Since we only have missing data on happiness score, and happiness score is our variable of interest, CCA and ACA are the same thing :)
 
 $$\widehat{Happiness} = -2.24 + 0.82 logGDP$$
-
 ```{r}
-# Train the model
 MAR25_model <- lm( happiness ~ logGDP, data = happiness25)
 
-# Look at the regression coefficients
 MAR25_model$coefficients
-
-# Build a 95% confidence interval
-confint(MAR25_model, level = .95)
 ```
+
 #### Question 11 Build a 95% confidence interval for the population slope using the model you trained in Question 10. Is this the same interval you got from the model trained on the full data set? If it is different, explain what about the interval is different than when we used the full data set.
 
-The 95% confidence interval is (0.70, 0.93). It is not the same interval we got from the full data set. The new 95%CI for hte intercept decreases while that for the logGDP increases.I think this interval generally has a larger slope than what we used in full data set.
+The 95% confidence intervals for the two models are different. The new 95%CI for hte intercept decreases while that for the logGDP increases.
+```{r}
+# Build a 95% confidence interval
+confint(full_model, level = .95)
+confint(MAR25_model, level = .95)
+```
+#### Question 12 a) Fill in the blanks in the skeleton code above to find the mean happiness score in the observed (non-missing) values in the happiness25 data set. State the mean (round to two decimal places). b) What do you think the na.rm = TRUE part of the code does?
 
-
-
-
-| **Full Data **   |             |             |   |   | |------------------|-------------|-------------|---|---| |                  | Lower Bound | Upper Bound |   |   | | Intercept        | -2.41       | -.51        |   |   | | Slope            | .64         | .84         |   |   | |------------------|-------------|-------------|---|---| | **25% Missing ** |             |             |   |   | |------------------|-------------|-------------|---|---| |                  | Lower Bound | Upper Bound |   |   | | Intercept        |             |             |   |   | | Slope  
-
-
-
-#### Question 12 Fill in the blanks in the skeleton code above to find the mean happiness score in the observed (non-missing) values in the happiness25 data set. State the mean (round to two decimal places). What do you think the na.rm = TRUE part of the code does?
-
+a) The mean value of happiness score is 5.41
+b) This part is to ensure that we do not have any missing data involved when we are calculating the mean value.
 ```{r}
 # Find the mean of happiness score
 # in the happiness25 data set
 mean(happiness25$happiness, na.rm = TRUE)
 ```
-
-a) The mean value of happiness score is 5.41
-b) This part is to ensure that we do not have any missing data involved when we are calculating the mean value.
-
 #### Question 13 Does row 11 have a missing value for happiness score in the happiness25 data set?
+
+No, row 11 does not have a missing value for happiness score in the happiness25 data set.
 ```{r}
-is.na(happiness25$happiness[11])
+is.na(happiness25[11,]$happiness)
 ```
-
-
-
-No.
-
 
 #### Question 14 How would you change the code to find all the values that do NOT have missing data?
-```{r}
-which( is.na( happiness25$happiness) == FALSE)
-```
 
-
-We will change "== TRUE" to "== FALSE"
-
-```{r}
-# Find the rows missing happiness score
-# in the happiness25 data set
-whichMissing <- which(is.na(happiness25$happiness) == TRUE)
-
-# Create a new column in the data set 
-# called happiness_UMI
-happiness25[,"happiness_UMI"] <- happiness25[, "happiness"]
-
-# Fill in the missing values in with the mean
-happiness25[     , "happiness_UMI"] <- 
-```
-
-
+We will change the " == TRUE" into " == FALSE".
 
 #### Question 15 Fill in the blanks in the skeleton code above to use UMI to impute the missing values for happiness score. Run the code and show your code.
-```{r, echo = TRUE}
+
+```{r}
 # Find the rows missing happiness score
 # in the happiness25 data set
 whichMissing <- which(is.na(happiness25$happiness) == TRUE)
 
 # Create a new column in the data set 
 # called happiness_UMI
-happiness25[,"happiness_UMI"] <- happiness25[, "happiness"]
+happiness25[,"happiness_UMI"] <- happiness25[,"happiness"]
 
 # Fill in the missing values in with the mean
-happiness25[ whichMissing, "happiness_UMI"] <- mean(happiness25$happiness, na.rm = TRUE)
+happiness25[whichMissing, "happiness_UMI"] <- 5.41
 ```
 
-
-#### Question 16
-
-$$\widehat{Happiness} = -0.20 + 0.59 logGDP$$
+#### Question 16 Train a LSLR model with X = log GDP and Y = happiness_UMI using the happiness25 data set. Store your model output under the name UMI_model. Build and show a 95% confidence interval for the population slope using this trained model.
 
 ```{r}
 # Train the model
-UMI_model <- lm(happiness_UMI ~ logGDP, data = happiness25)
+UMI_model <- lm( happiness_UMI ~ logGDP, data = happiness25)
 
 # Look at the regression coefficients
 UMI_model$coefficients
@@ -239,23 +181,22 @@ UMI_model$coefficients
 # Build a 95% confidence interval
 confint(UMI_model, level = .95)
 ```
-
 #### Question 17 Discuss how the upper and lower bounds of the confidence intervals you got on the UMI imputed data differ from the above, correct confidence intervals.
-
 For confidence interval got from UMI data, confidence interval for intercept increase. This shows that this model's predictive power is weakened. 
 
 #### Question 18 Based on the definition of the RMSE, if we are using RMSE to assess imputation accuracy, do larger or smaller values of the RMSE indicate more accurate imputations?
-
 Smaller values of the RMSE would indicate more accurate imputations. It gives us shorter distances between the imputations and the truth.
 
+#### Question 19 What is the RMSE for UMI? Round to two decimal places.
+The RMSE for UMI is 5.73
 ```{r}
 compute_RMSE <- function(truth, imputations){
 
   # Part 1
-  part1 <- (truth - imputations)
+  part1 <- truth - imputations
   
   #Part 2
-  part2 <- part1^2
+  part2 <- (part1)^2
   
   #Part 3: RSS 
   part3 <- sum(part2)
@@ -268,10 +209,6 @@ compute_RMSE <- function(truth, imputations){
 }
 ```
 
-
-
-#### Question 19 What is the RMSE for UMI? Round to two decimal places.
-
 ```{r}
 # Pull the imputations
 imputations_UMI <-  happiness25[whichMissing, "happiness_UMI"]
@@ -282,8 +219,9 @@ truth <- Happiness[whichMissing, "happiness"]
 # Compute the RSME for UMI
 compute_RMSE(truth , imputations_UMI )
 ```
-The RMSE for UMI is 5.73
 
+#### Question 20 You will notice that we excluded column 1 and column 9 as features in training our imputation engine. Why did we need to do that?
+Column 1 is a categorical variables and it is unique for every row. We can not really take this feature into regression model. Column 9 is the happiness UMI score. We will have duplicate values if we put this into model.
 
 ```{r}
 # Build a model for imputation
@@ -297,31 +235,24 @@ happiness25$happiness_Regression <- happiness25$happiness
 happiness25[whichMissing, "happiness_Regression"] <-predict(imputation_engine, newdata = happiness25[whichMissing,-c(1,9)])
 ```
 
-
-#### Question 20 You will notice that we excluded column 1 and column 9 as features in training our imputation engine. Why did we need to do that?
-
-Column 1 is a categorical variables and it is unique for every row. We can not really take this feature into regression model. Column 9 is the happiness UMI score. We will have duplicate values if we put this into model.
-
 #### Question 21 Train the LSLR model with X = log GDP and Y = happiness_Regression using the happiness25 data set. Build and show a 95% confidence interval for the population slope.
 
-
 ```{r}
-model1 <- lm(happiness_Regression ~ logGDP, data = happiness25)
+# Train the model
+UMI_model <- lm( happiness_Regression ~ logGDP, data = happiness25)
 
 # Look at the regression coefficients
-model1$coefficients
+UMI_model$coefficients
 
 # Build a 95% confidence interval
-confint(model1, level = .95)
+confint(UMI_model, level = .95)
 ```
 
 #### Question 22 Discuss how this interval compares to the one on the full data set (with no missing data).
-
 The confidence interval for intercept has smaller number than full data set. The interval for population slope is different by slightly higher number.
 
 #### Question 23 What is the RMSE for regression imputation?
-
-
+The RMSE for regression imputation is 2.84
 ```{r}
 
 # Pull the imputations
@@ -334,23 +265,18 @@ truth_Regression <- Happiness[whichMissing, "happiness"]
 compute_RMSE(truth_Regression , imputations_Regression )
 
 ```
-The RMSE for regression imputation is 2.84
 
-#### Question 24 What is the percent improvement in the RMSE for regression imputation versus UMI? 
-
+#### Question 24 What is the percent improvement in the RMSE for regression imputation versus UMI?
+The percent improvement is about 50.3445%
 ```{r}
 UMI_RMSE = compute_RMSE(truth, imputations_UMI)
 Regression_RMSE = compute_RMSE(truth_Regression, imputations_Regression)
 
 (UMI_RMSE - Regression_RMSE)/ UMI_RMSE * 100
 ```
-The percent improvement is about 50.3445%
-
 
 #### Question 25 Suppose we are in the situation where a feature has 80% of its rows missing. How would you handle the missing data in this feature?
-
 If this feature is not important, we can just remove this feature from the data set. We can also turn this feature into simply 0s and 1s. The one with valid data is marked as 1 and the missing part is marked as 0.
 
 #### Question 26 Suppose we are in the situation where we can’t seem to find a strong imputation engine, meaning the feature is not highly related to other variables in the data set. The missingness is 25%. How would you handle the missing data for this feature?
-
 We can choose to perform UMI which filling the missing data with its mean value. We can also just randomly filling th missing data by choosing the value between 1/4 quarter and 3/4 quarter.
