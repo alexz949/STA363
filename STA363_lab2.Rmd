@@ -229,8 +229,7 @@ confint(UMI_model, level = .95)
 
 #### Question 17 Discuss how the upper and lower bounds of the confidence intervals you got on the UMI imputed data differ from the above, correct confidence intervals.
 
-For confidence interval got from UMI data, confidence interval for intercept increase but interval for population slope decreases.s
-
+For confidence interval got from UMI data, confidence interval for intercept increase. This shows that this model's predictive power is weakened. 
 
 #### Question 18 Based on the definition of the RMSE, if we are using RMSE to assess imputation accuracy, do larger or smaller values of the RMSE indicate more accurate imputations?
 
@@ -339,26 +338,6 @@ The percent improvement is about 50.3445%
 
 If this feature is not important, we can just remove this feature from the data set. We can also turn this feature into simply 0s and 1s. The one with valid data is marked as 1 and the missing part is marked as 0.
 
-
 #### Question 26 Suppose we are in the situation where we can’t seem to find a strong imputation engine, meaning the feature is not highly related to other variables in the data set. The missingness is 25%. How would you handle the missing data for this feature?
 
 We can choose to perform UMI which filling the missing data with its mean value. We can also just randomly filling th missing data by choosing the value between 1/4 quarter and 3/4 quarter.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
