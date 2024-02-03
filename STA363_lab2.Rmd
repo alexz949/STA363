@@ -141,19 +141,19 @@ summary(happiness25)
 ```
 Based on the summary, there are 34 missing rows on happiness score.
 
-#### Question 10
+#### Question 10 Train a LSLR model with X = log GDP and Y = happiness score using the happiness25 data set. Store your model output under the name MAR25_model. Write down the trained LSLR model using proper notation.
 
 $$\widehat{Happiness} = -2.24 + 0.82 logGDP$$
 
 ```{r}
 # Train the model
-full_model <- lm( happiness ~ logGDP, data = happiness25)
+MAR25_model <- lm( happiness ~ logGDP, data = happiness25)
 
 # Look at the regression coefficients
-full_model$coefficients
+MAR25_model$coefficients
 
 # Build a 95% confidence interval
-confint(full_model, level = .95)
+confint(MAR25_model, level = .95)
 ```
 #### Question 11 Build a 95% confidence interval for the population slope using the model you trained in Question 10. Is this the same interval you got from the model trained on the full data set? If it is different, explain what about the interval is different than when we used the full data set.
 
@@ -189,16 +189,29 @@ No.
 
 #### Question 14 How would you change the code to find all the values that do NOT have missing data?
 ```{r}
-which( is.na( happiness25$happiness) == TRUE)
+which( is.na( happiness25$happiness) == FALSE)
+```
+
+
+We will change "== TRUE" to "== FALSE"
+
+```{r}
+# Find the rows missing happiness score
+# in the happiness25 data set
+whichMissing <- which(is.na(happiness25$happiness) == TRUE)
+
+# Create a new column in the data set 
+# called happiness_UMI
+happiness25[,"happiness_UMI"] <- happiness25[, "happiness"]
+
+# Fill in the missing values in with the mean
+happiness25[     , "happiness_UMI"] <- 
 ```
 
 
 
-
-
-
 #### Question 15 Fill in the blanks in the skeleton code above to use UMI to impute the missing values for happiness score. Run the code and show your code.
-```{r}
+```{r, echo = TRUE}
 # Find the rows missing happiness score
 # in the happiness25 data set
 whichMissing <- which(is.na(happiness25$happiness) == TRUE)
@@ -218,7 +231,7 @@ $$\widehat{Happiness} = -0.20 + 0.59 logGDP$$
 
 ```{r}
 # Train the model
-UMI_model <- lm( happiness_UMI ~ logGDP, data = happiness25)
+UMI_model <- lm(happiness_UMI ~ logGDP, data = happiness25)
 
 # Look at the regression coefficients
 UMI_model$coefficients
@@ -239,7 +252,7 @@ Smaller values of the RMSE would indicate more accurate imputations. It gives us
 compute_RMSE <- function(truth, imputations){
 
   # Part 1
-  part1 <- truth - imputations
+  part1 <- (truth - imputations)
   
   #Part 2
   part2 <- part1^2
