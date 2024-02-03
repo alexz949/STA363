@@ -1,6 +1,6 @@
 ---
 title: "STA363 Lab2"
-author: "Andrea Jiang, Elaine Lu, Alex Zhang"
+author: "Shiyu Jiang, Elaine Lu, Alex Zhang"
 output: html_document
 date: "2024-01-26"
 ---
@@ -11,18 +11,18 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```{r}
 library(readxl)
-DataForFigure2.1WHR2023 <- read_excel("~/Desktop/大学/Courses/STA/STA 363/Lab2/DataForFigure21WHR2023.xls")
+DataForFigure21WHR2023 <- read_excel("C:/Users/Administrator/Desktop/STA363/DataForFigure21WHR2023 .xls")
 ```
 
 ```{r}
 # Step 1: 
 # Create a new copy of the data set
 # under the new code name we want
-Happiness <- DataForFigure2.1WHR2023
+Happiness <- DataForFigure21WHR2023
 
 # Step 2: 
 # Remove the original data set
-rm(DataForFigure2.1WHR2023)
+rm(DataForFigure21WHR2023)
 ```
 
 #### Question 1 Using this idea of storing, create an object called holder which contains (stores) the numbers 1 through 7 (1:7). Once you have done this, type holder into a chunk and press play to show what has been stored under that name!
@@ -59,7 +59,7 @@ Happiness <- Happiness[,-c(3:5)]
 #### Question 5 We have already removed columns 3 to 5. Next, we need to remove columns 9 through 16. Show and run the code you would need to do remove columns 9 through 16. Originally, I told you we needed to remove columns 3-5 and columns 12 - 19. Why are we now removing 9 - 16 instead of 12 - 19?
 
 a)  Happiness <- Happiness[,-c(12:16)]
-b)  Since we firstly removed column 3-5, the numbers of the columns will thus change correspondingly. After removing, all the columns number after 5 will decrease by 3. Hence, the column numbers asked (12-19) will now decrease by 3, resuling in 9-16.
+b)  Since we firstly removed column 3-5, the numbers of the columns will thus change correspondingly. After removing, all the columns number after 5 will decrease by 3. Hence, the column numbers asked (12-19) will now decrease by 3, resulting in 9-16.
 
 ```{r}
 Happiness <- Happiness[,-c(9:16)]
@@ -73,9 +73,9 @@ colnames(Happiness)
 ```
 
 #### Question 7 Is this a prediction task or an association task?
-This is an association task because our client is interested in the relationship of the responding var. and the explantory var.
+This is an association task because our client is interested in the relationship of the responding var. and the explanatory var.
 
-$$\widehat{Happiness} = -1.46 + 0.74 logGDP$$
+$$\widehat{Happiness}_i = -1.46 + 0.74 logGDP_i$$
 
 ```{r}
 # Train the model
@@ -83,6 +83,9 @@ full_model <- lm( happiness ~ logGDP, data = Happiness)
 
 # Look at the regression coefficients
 full_model$coefficients
+
+# Build a 95% confidence interval
+confint(full_model, level = .95)
 ```
 
 
@@ -120,7 +123,7 @@ summary(happiness25)
 
 #### Question 10 Train a LSLR model with X = log GDP and Y = happiness score using the happiness25 data set. Store your model output under the name MAR25_model. Write down the trained LSLR model using proper notation. Note: When you run lm with missing data, it performs available case analysis (removing all rows without information in X or Y). Since we only have missing data on happiness score, and happiness score is our variable of interest, CCA and ACA are the same thing :)
 
-$$\widehat{Happiness} = -2.24 + 0.82 logGDP$$
+$$\widehat{Happiness}_i = -2.24 + 0.82 logGDP_i$$
 ```{r}
 MAR25_model <- lm( happiness ~ logGDP, data = happiness25)
 
@@ -129,7 +132,7 @@ MAR25_model$coefficients
 
 #### Question 11 Build a 95% confidence interval for the population slope using the model you trained in Question 10. Is this the same interval you got from the model trained on the full data set? If it is different, explain what about the interval is different than when we used the full data set.
 
-The 95% confidence intervals for the two models are different. The new 95%CI for hte intercept decreases while that for the logGDP increases.
+This is not the same interval we got from the full data set. I think is because we may remove more smaller happiness scores which cause the confidence interval to be larger than the one in full model. And data itself is a little bit skewed.
 ```{r}
 # Build a 95% confidence interval
 confint(full_model, level = .95)
@@ -139,7 +142,7 @@ confint(MAR25_model, level = .95)
 
 a) The mean value of happiness score is 5.41
 b) This part is to ensure that we do not have any missing data involved when we are calculating the mean value.
-```{r}
+```{r, echo = TRUE}
 # Find the mean of happiness score
 # in the happiness25 data set
 mean(happiness25$happiness, na.rm = TRUE)
@@ -157,7 +160,7 @@ We will change the " == TRUE" into " == FALSE".
 
 #### Question 15 Fill in the blanks in the skeleton code above to use UMI to impute the missing values for happiness score. Run the code and show your code.
 
-```{r}
+```{r, echo =TRUE}
 # Find the rows missing happiness score
 # in the happiness25 data set
 whichMissing <- which(is.na(happiness25$happiness) == TRUE)
@@ -167,10 +170,11 @@ whichMissing <- which(is.na(happiness25$happiness) == TRUE)
 happiness25[,"happiness_UMI"] <- happiness25[,"happiness"]
 
 # Fill in the missing values in with the mean
-happiness25[whichMissing, "happiness_UMI"] <- 5.41
+happiness25[whichMissing, "happiness_UMI"] <- mean(happiness25$happiness, na.rm = TRUE)
 ```
 
 #### Question 16 Train a LSLR model with X = log GDP and Y = happiness_UMI using the happiness25 data set. Store your model output under the name UMI_model. Build and show a 95% confidence interval for the population slope using this trained model.
+$$\widehat{Happiness}_i = -0.20 + 0.59 logGDP_i$$
 
 ```{r}
 # Train the model
@@ -183,7 +187,7 @@ UMI_model$coefficients
 confint(UMI_model, level = .95)
 ```
 #### Question 17 Discuss how the upper and lower bounds of the confidence intervals you got on the UMI imputed data differ from the above, correct confidence intervals.
-For confidence interval got from UMI data, confidence interval for intercept increase. This shows that this model's predictive power is weakened. 
+For confidence interval got from UMI data, confidence interval for intercept increase. The confidence interval for population slope decreases. 
 
 #### Question 18 Based on the definition of the RMSE, if we are using RMSE to assess imputation accuracy, do larger or smaller values of the RMSE indicate more accurate imputations?
 Smaller values of the RMSE would indicate more accurate imputations. It gives us shorter distances between the imputations and the truth.
